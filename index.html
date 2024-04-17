@@ -37,7 +37,7 @@
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      const pickupLineContainer = document.getElementById('pickup-line');
+      const pickupLineContainer = document.getElementById('pickup');
       pickupLineContainer.textContent = data.line;
       pickupLineContainer.style.animation = 'none';
       // Trigger reflow to restart the animation
