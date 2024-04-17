@@ -4,19 +4,6 @@
   <!-- Link to your external CSS files -->
   <link rel="stylesheet" type="text/css" href="css/main.css">
   <link rel="stylesheet" type="text/css" href="css/style.css">
-  <style>
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    #pickup-line {
-      opacity: 0; /* Start with the text invisible */
-      animation-name: fadeIn;
-      animation-duration: 2s;
-      animation-fill-mode: both;
-    }
-  </style>
 </head>
 <body>
 
@@ -25,30 +12,45 @@
 
 <!-- Elongated pill-shaped button link to the flower page -->
 <button onclick="location.href='flower.html'" style="border: none; color: white; padding: 10px 40px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 20px; background-color: #4CAF50;">Order Flowers</button>
-<!-- Add more buttons as needed -->
 
 <div id="pickup-line"></div>
 
 <script>
-  async function fetchPickupLine() {
+  // Array of songs
+  const songs = [
+    '2 Thick.mp3'
+    // Add more song file names here
+  ];
+
+  // Function to play a random song
+  function playRandomSong() {
+    const randomIndex = Math.floor(Math.random() * songs.length);
+    const audio = new Audio(songs[randomIndex]);
+    audio.play();
+  }
+
+  // Play a random song when the page loads
+  window.onload = playRandomSong;
+
+  // Existing function to load pickup lines
+  async function loadPickupLines() {
     try {
-      const response = await fetch('https://vinuxd.vercel.app/api/pickup');
+      const response = await fetch('pickup-lines.json');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      const data = await response.json();
-      const pickupLineContainer = document.getElementById('pickup');
-      pickupLineContainer.textContent = data.line;
-      pickupLineContainer.style.animation = 'none';
-      // Trigger reflow to restart the animation
-      pickupLineContainer.offsetHeight;
-      pickupLineContainer.style.animation = '';
+      const pickupLines = await response.json();
+      function loadPickupLine() {
+        const randomIndex = Math.floor(Math.random() * pickupLines.length);
+        document.getElementById('pickup-line').textContent = pickupLines[randomIndex];
+      }
+      setInterval(loadPickupLine, 6000); // Load a new pickup line every 6 seconds
     } catch (error) {
-      console.error('There has been a problem with your fetch operation:', error);
+      console.error('Could not load pickup lines:', error);
     }
   }
 
-  setInterval(fetchPickupLine, 2000); // Fetch a new pickup line every 2 seconds
+  loadPickupLines();
 </script>
 
 <!-- Ensure the path to your main.js is correct -->
