@@ -11,6 +11,7 @@
     }
 
     #pickup-line {
+      opacity: 0; /* Start with the text invisible */
       animation-name: fadeIn;
       animation-duration: 2s;
       animation-fill-mode: both;
@@ -36,11 +37,12 @@
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      document.getElementById('pickup-line').textContent = data.pickup_line;
-      document.getElementById('pickup-line').style.animation = 'none';
-      setTimeout(() => {
-        document.getElementById('pickup-line').style.animation = '';
-      }, 100); // Reset animation
+      const pickupLineContainer = document.getElementById('pickup-line');
+      pickupLineContainer.textContent = data.line;
+      pickupLineContainer.style.animation = 'none';
+      // Trigger reflow to restart the animation
+      pickupLineContainer.offsetHeight;
+      pickupLineContainer.style.animation = '';
     } catch (error) {
       console.error('There has been a problem with your fetch operation:', error);
     }
